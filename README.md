@@ -1,90 +1,94 @@
-# Dự Đoán Sử Dụng Internet Có Vấn Đề ở Trẻ Em Bằng Dữ Liệu Thể Chất và Thể Dục
+# Predicting Problematic Internet Use in Children Using Physical and Fitness Data
 
-Dự án này nhằm phát triển một mô hình học máy để dự đoán việc sử dụng internet có vấn đề ở trẻ em và thanh thiếu niên bằng cách sử dụng dữ liệu thể chất và thể dục. Bằng cách tận dụng các phép đo thể chất dễ dàng thu thập, mô hình này xác định các dấu hiệu sớm của việc sử dụng internet có vấn đề, cho phép can thiệp kịp thời để thúc đẩy các thói quen kỹ thuật số lành mạnh hơn.
+This project aims to develop a machine learning model to predict problematic internet use in children and adolescents by leveraging physical and fitness-related data. By using easily accessible physical measurements, the model seeks to identify early signs of problematic internet behavior, enabling timely interventions to foster healthier digital habits.
 
-## Bối Cảnh
+## Background
 
-Việc sử dụng internet có vấn đề ở trẻ em và thanh thiếu niên ngày càng phổ biến trong thời đại kỹ thuật số, thường liên quan đến các thách thức sức khỏe tâm thần như trầm cảm và lo âu. Các phương pháp đánh giá truyền thống phức tạp, đòi hỏi chuyên môn chuyên nghiệp, gây ra các rào cản về khả năng tiếp cận, văn hóa và ngôn ngữ cho nhiều gia đình. Ngược lại, các phép đo thể chất và thể dục—như tư thế, chế độ ăn uống và mức độ hoạt động—dễ dàng tiếp cận và có thể dùng làm chỉ số để phát hiện việc sử dụng công nghệ quá mức. Dự án này khám phá các chỉ số này để cung cấp một giải pháp có thể mở rộng nhằm xác định việc sử dụng internet có vấn đề, đặc biệt là ở những nơi thiếu nguồn lực.
+Problematic internet use (PIU) among children and adolescents is increasingly prevalent in the digital age and is often linked to mental health challenges such as depression and anxiety. Traditional assessment methods are complex, requiring professional expertise and posing accessibility, cultural, and language barriers for many families. In contrast, physical and fitness indicators—such as posture, diet, and activity levels—are easy to obtain and can act as proxies to detect excessive technology use. This project explores those indicators to provide a scalable solution for identifying problematic internet usage, especially in resource-limited settings.
 
-## Bộ Dữ Liệu
+## Dataset
 
-Bộ dữ liệu được lấy từ cuộc thi của Viện Tâm Trí Trẻ Em về việc sử dụng internet có vấn đề. Nó bao gồm:
+The dataset originates from a competition organized by the Child Mind Institute and includes:
 
-- **Đặc Điểm Thể Chất**: BMI, chiều cao, cân nặng, v.v.
-- **Khía Cạnh Hành Vi**: Mô hình sử dụng internet.
-- **Dữ Liệu Thể Dục**: Thời gian chịu đựng, nhịp tim, v.v.
-- **Dữ Liệu Chuỗi Thời Gian**: Dữ liệu actigraphy được xử lý thành các đặc trưng thống kê.
+- **Physical Attributes**: BMI, height, weight, etc.
+- **Behavioral Aspects**: Patterns of internet use.
+- **Fitness Data**: Endurance time, heart rate, etc.
+- **Time-Series Data**: Actigraphy data processed into statistical features.
 
-Dữ liệu được chia thành tập huấn luyện và tập kiểm tra, với dữ liệu chuỗi thời gian bổ sung được hợp nhất để tăng cường khả năng dự đoán.
+The data is split into training and testing sets, with time-series data merged in to enhance predictive performance.
 
-## Phương Pháp
+## Methodology
 
-Quy trình học máy trong dự án được thực hiện như sau:
+The machine learning pipeline includes the following steps:
 
-- **Kỹ Thuật Đặc Trưng**:
-  - Lựa chọn các đặc trưng thể chất, hành vi và thể dục liên quan.
-  - Mã hóa các biến phân loại (ví dụ: mùa) thành giá trị số.
-  - Tổng hợp các thống kê chuỗi thời gian (trung bình, độ lệch chuẩn) từ dữ liệu actigraphy.
-  - Tạo các đặc trưng phái sinh (ví dụ: `BMI_Age`, `Internet_Hours_Age`).
+### Feature Engineering
 
-- **Tiền Xử Lý Dữ Liệu**:
-  - Xử lý giá trị thiếu bằng cách nội suy KNN.
-  - Chuẩn hóa và điều chỉnh tỷ lệ cho tương thích với mô hình.
+- Selected relevant physical, behavioral, and fitness-related features.
+- Encoded categorical variables (e.g., season) numerically.
+- Extracted statistical features (mean, std, etc.) from time-series actigraphy data.
+- Created derived features like `BMI_Age`, `Internet_Hours_Age`.
 
-- **Huấn Luyện Mô Hình**:
-  - Sử dụng nhiều mô hình hồi quy: LightGBM, XGBoost, CatBoost, RandomForest và GradientBoosting.
-  - Áp dụng kỹ thuật ensemble, bao gồm VotingRegressor, để kết hợp các dự đoán.
-  - Điều chỉnh siêu tham số để đạt hiệu suất tối ưu.
+### Data Preprocessing
 
-- **Đánh Giá**:
-  - Xác thực chéo Stratified K-Fold (5 fold).
-  - Sử dụng điểm Quadratic Weighted Kappa (QWK) làm thước đo đánh giá.
-  - Tối ưu hóa ngưỡng để tối đa hóa QWK.
+- Handled missing values using KNN imputation.
+- Normalized and scaled features for model compatibility.
 
-## Kết Quả
+### Model Training
 
-Các mô hình được đánh giá bằng xác thực chéo 5 fold, với hiệu suất được đo bằng điểm QWK:
+- Applied various regression models: LightGBM, XGBoost, CatBoost, RandomForest, and GradientBoosting.
+- Used ensemble techniques like `VotingRegressor` to combine model predictions.
+- Fine-tuned hyperparameters for optimal performance.
 
-| Mô Hình                | QWK Xác Thực Trung Bình | QWK Tối Ưu Hóa |
-|-----------------------|-------------------------|----------------|
-| LightGBM             | 0.4078                 | 0.445          |
-| CatBoost             | 0.3602                 | 0.457          |
-| XGBoost              | 0.3913                 | 0.434          |
-| VotingRegressor      | 0.3893                 | 0.449          |
-| Ensemble (Tất Cả Mô Hình) | 0.3785            | 0.448          |
+### Evaluation
 
-Bản nộp cuối cùng sử dụng biểu quyết đa số từ các dự đoán của mô hình để xác định điểm `sii` (Mức Độ Nghiêm Trọng của Vấn Đề Internet).
+- Performed 5-fold stratified cross-validation.
+- Used Quadratic Weighted Kappa (QWK) as the evaluation metric.
+- Optimized thresholds to maximize QWK.
 
-## Cách Sử Dụng
+## Results
 
-Để chạy mã nguồn và tái tạo kết quả, làm theo các bước sau:
+The models were evaluated using 5-fold cross-validation. The average and optimized QWK scores are as follows:
 
-1. **Các Phụ Thuộc**:
-   - Cài đặt các thư viện Python cần thiết: `numpy`, `pandas`, `scikit-learn`, `lightgbm`, `xgboost`, `catboost`, `torch`, `polars`, `matplotlib`, `seaborn`.
-   - Khuyến nghị sử dụng GPU để huấn luyện nhanh hơn (được cấu hình trong tham số mô hình).
+| Model                  | Avg QWK (CV) | Optimized QWK |
+|------------------------|--------------|----------------|
+| LightGBM              | 0.4078       | 0.445          |
+| CatBoost              | 0.3602       | 0.457          |
+| XGBoost               | 0.3913       | 0.434          |
+| VotingRegressor       | 0.3893       | 0.449          |
+| Full Ensemble         | 0.3785       | 0.448          |
 
-2. **Dữ Liệu**:
-   - Tải bộ dữ liệu từ cuộc thi của Viện Tâm Trí Trẻ Em trên Kaggle.
-   - Đặt các tệp vào các thư mục thích hợp:
-     - `train.csv`, `test.csv`, `sample_submission.csv` trong thư mục gốc.
-     - Dữ liệu chuỗi thời gian trong `series_train.parquet` và `series_test.parquet`.
+The final submission used a majority vote ensemble of model predictions to determine the `sii` (Severity of Internet Issue) score.
 
-3. **Chạy Notebook**:
-   - Mở tệp `lb0-494-with-tabnet-ds102.ipynb` trong Jupyter Notebook hoặc môi trường tương thích.
-   - Thực thi các ô theo thứ tự để:
-     - Tải và tiền xử lý dữ liệu.
-     - Huấn luyện các mô hình.
-     - Tạo dự đoán.
+## How to Use
 
-4. **Kết Quả**:
-   - Tệp `submission.csv` sẽ được tạo với các giá trị `sii` dự đoán cho tập kiểm tra.
+To run the code and reproduce results:
 
-## Kết Luận
+1. **Install Dependencies**:
+   - Required Python libraries: `numpy`, `pandas`, `scikit-learn`, `lightgbm`, `xgboost`, `catboost`, `torch`, `polars`, `matplotlib`, `seaborn`.
+   - GPU usage is recommended and configured in model parameters.
 
-Dự án này chứng minh tiềm năng của việc sử dụng dữ liệu thể chất và thể dục làm chỉ số để dự đoán việc sử dụng internet có vấn đề ở trẻ em. Ensemble của các mô hình học máy đạt được hiệu suất dự đoán hợp lý, với điểm QWK tối ưu hóa khoảng 0.45. Các cải tiến trong tương lai có thể bao gồm:
+2. **Prepare Data**:
+   - Download the dataset from the Child Mind Institute Kaggle competition.
+   - Place the files in appropriate directories:
+     - `train.csv`, `test.csv`, `sample_submission.csv` in the root folder.
+     - Time-series files: `series_train.parquet`, `series_test.parquet`.
 
-- Kỹ thuật đặc trưng nâng cao.
-- Tích hợp các nguồn dữ liệu bổ sung.
-- Khám phá các phương pháp học sâu.
+3. **Run Notebook**:
+   - Open `lb0-494-with-tabnet-ds102.ipynb` in Jupyter Notebook or a compatible environment.
+   - Execute all cells in order:
+     - Load and preprocess data.
+     - Train models.
+     - Generate predictions.
 
-Chúng tôi hoan nghênh các đóng góp cho kho lưu trữ này để tiếp tục nâng cao mô hình và thúc đẩy các thói quen kỹ thuật số lành mạnh hơn ở trẻ em!
+4. **Output**:
+   - A `submission.csv` file will be created containing the predicted `sii` values for the test set.
+
+## Conclusion
+
+This project demonstrates the potential of using physical and fitness data as indicators for predicting problematic internet usage in children. The ensemble of machine learning models achieved a reasonable prediction performance, with optimized QWK scores around 0.45. Future improvements may include:
+
+- Advanced feature engineering.
+- Integration of additional data sources.
+- Exploration of deep learning methods.
+
+We welcome contributions to this repository to further improve the model and promote healthier digital behaviors in children!
